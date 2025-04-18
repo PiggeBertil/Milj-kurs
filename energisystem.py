@@ -169,8 +169,11 @@ model.prod = Var(model.nodes, model.gens, model.hours, doc='Generator prod')
 
 
 #CONSTRAINTS
-def prodcapa_rule(model, nodes, gens, hours):
-    return model.prod[nodes, gens, hours] <= model.capa[nodes, gens]
+def prodcapa_rule(model, nodes, gens):
+    sum = 0
+    for h in model.hours:
+        sum += model.prod[nodes, gens, h]
+    return sum <= model.capa[nodes, gens]
 
 def prodDemand_rule(model, nodes, hours):
     sum = 0
@@ -184,10 +187,18 @@ def windMax_rule(model, nodes, hours): # the wind can only blow so much
 def pvMax_rule(model, nodes, hours): # the sun can only shine so much
     return model.prod[nodes, 'PV', hours] <= model.solar[nodes, hours] * model.capa[nodes, 'PV']
 
-model.prodCapa = Constraint(model.nodes, model.gens, model.hours, rule=prodcapa_rule)
+def capaMin_rule(model, nodes, gens):
+    return model.capa[nodes, gens] >= 0
+
+def prodMin_rule(model, nodes, gens, hours):
+    return model.prod[nodes, gens, hours] >= 0
+
+model.prodCapa = Constraint(model.nodes, model.gens, rule=prodcapa_rule)
 model.prodDemand = Constraint(model.nodes, model.hours, rule=prodDemand_rule)
 model.prodWind = Constraint(model.nodes, model.hours, rule=windMax_rule)
 model.prodPV = Constraint(model.nodes, model.hours, rule=pvMax_rule)
+model.capaMin = Constraint(model.nodes, model.gens, rule=capaMin_rule)
+model.prodMin = Constraint(model.nodes, model.gens, model.hours, rule=prodMin_rule)
 
 
 #OBJECTIVE FUNCTION
