@@ -127,12 +127,13 @@ def fuelData():
         fuel[g] = float(tech_data[g]['fuel_cost'])
     return fuel
 
+
+
 def lifetimeData():
     lifetime = {}
     for g in model.gens:
         lifetime[g] = float(tech_data[g]['lifetime'])
     return lifetime
-
 
 #SETS
 model.nodes = Set(initialize=countries, doc='countries')
@@ -177,7 +178,13 @@ model.prod = Var(model.nodes, model.gens, model.hours, doc='Generator cap')
 def prodcapa_rule(model, nodes, gens, time):
     return model.prod[nodes, gens, time] <= model.capa[nodes, gens]
 
+def demand_satisfied_rule(model, n, t):
+    #Ska vi gångra med eta?
+    return sum(model.prod[n, g, t] for g in model.gens) >= model.demand[n, t]
 
+
+
+model.demandSatisfied = Constraint(model.nodes, model.hours, rule=demand_satisfied_rule)
 model.prodCapa = Constraint(model.nodes, model.gens, model.hours, rule=prodcapa_rule)
 
 
@@ -195,6 +202,7 @@ def objective_rule(model):
 
     
     return anual_cost
+
 
 model.objective = Objective(rule=objective_rule, sense=minimize, doc='Objective function')
 
