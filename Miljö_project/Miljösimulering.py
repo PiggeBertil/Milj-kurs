@@ -76,3 +76,26 @@ plt.plot(time, [B[2]*Conversion_factor for B in Bs], label= "B_3 Beta=0.8", colo
 plt.legend()
 
 plt.show()
+
+# Task 3
+A = np.array([0.113, 0.213, 0.258, 0.273, 0.1430])
+tau_0 = np.array([2.0, 12.2, 50.4, 243.3, np.inf])
+
+k = 3.06 * 10 ** (-3)
+
+def tau(i, t):
+    U = np.array([emisions_df.loc[emisions_df['Time (year)'] == time].values[0][1] for time in range(1765, t-1)])
+    return tau_0[i] * (1 + k * np.sum(U, axis=0))
+
+Impulse = []
+def I(t):
+    sum = 0
+    for i in range(5):
+        sum += A[i] * np.exp(-t/tau(i,t))
+    return sum
+
+for t in time:
+    Impulse.append(I(t))
+    print(len(Impulse))
+
+plt.plot(time, Impulse)
