@@ -83,19 +83,20 @@ tau_0 = np.array([2.0, 12.2, 50.4, 243.3, np.inf])
 
 k = 3.06 * 10 ** (-3)
 
-def tau(i, t):
-    U = np.array([emisions_df.loc[emisions_df['Time (year)'] == time].values[0][1] for time in range(1765, t-1)])
-    return tau_0[i] * (1 + k * np.sum(U, axis=0))
+U = np.array([emisions_df.loc[emisions_df['Time (year)'] == t].values[0][1] for t in time])
+cumulative_emissions = np.cumsum(U)
+cumulative_emissions_shifted = np.concatenate(([0], cumulative_emissions[:-1])) # summan är upp till t-1
+
+tau_all = np.zeros((len(time), 5))
+for i in range(5):
+    tau_all[:,i] = tau_0[i] * (1 + k * cumulative_emissions_shifted)
 
 Impulse = []
-def I(t):
+for t in range(len(time)):
     sum = 0
     for i in range(5):
-        sum += A[i] * np.exp(-t/tau(i,t))
-    return sum
+        sum += A[i] * np.exp(-t/tau_all[t][i])
+    Impulse.append(sum)
 
-for t in time:
-    Impulse.append(I(t))
-    print(len(Impulse))
-
-plt.plot(time, Impulse)
+plt.plot(range(len(time)), Impulse)
+plt.show()
