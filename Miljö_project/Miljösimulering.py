@@ -55,7 +55,10 @@ def simulate(BETA = 0.3, B_0=B_0, time = time):
         Bs.append(B + dB)
 
     return Bs
-        
+    
+
+
+    
 Bs = simulate(BETA=0.1)
 plt.plot(time, [B[0]*Conversion_factor for B in Bs], label= "B_1 Beta=0.1", linestyle = "dotted", color = "red")
 plt.plot(time, [B[1]*Conversion_factor for B in Bs], label= "B_2 Beta=0.1", linestyle = "dotted", color = "blue")
