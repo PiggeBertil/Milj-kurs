@@ -55,7 +55,10 @@ def simulate(BETA = 0.3, B_0=B_0, time = time):
         Bs.append(B + dB)
 
     return Bs
-        
+    
+
+
+    
 Bs = simulate(BETA=0.1)
 plt.plot(time, [B[0]*Conversion_factor for B in Bs], label= "B_1 Beta=0.1", linestyle = "dotted", color = "red")
 plt.plot(time, [B[1]*Conversion_factor for B in Bs], label= "B_2 Beta=0.1", linestyle = "dotted", color = "blue")
@@ -91,7 +94,33 @@ def I(t, U_cum):
 A = np.array([0.113, 0.213, 0.258, 0.273, 0.1430])
 tau_0 = np.array([2.0, 12.2, 50.4, 243.3, np.inf])
 
+
+def I(t, U_cum):
+
+    k = 3.06 * 10 ** (-3)
+    summa = 0
+    for i in range(5):
+        tau_i = tau_0[i]*(1+k*U_cum)
+        summa += A[i] * np.exp(-t/tau_i)
+    return summa
+
+
+
+U = np.array([emisions_df.loc[emisions_df['Time (year)'] == t].values[0][1] for t in time])
+cumulative_emissions = np.cumsum(U)
+cumulative_emissions_shifted = np.concatenate(([0], cumulative_emissions[:-1])) # summan är upp till t-1
+
+
+plt.plot([I(t, cumulative_emissions_shifted[0])   for t in range(500)])
+plt.plot([I(t, cumulative_emissions_shifted[100]) for t in range(500)])
+plt.plot([I(t, cumulative_emissions_shifted[150]) for t in range(500)])
+plt.plot([I(t, cumulative_emissions_shifted[200]) for t in range(500)])
+plt.plot([I(t, cumulative_emissions_shifted[250]) for t in range(500)])
+
+plt.show()
+"""
 k = 3.06 * 10 ** (-3)
+
 
 U = np.array([emisions_df.loc[emisions_df['Time (year)'] == t].values[0][1] for t in time])
 cumulative_emissions = np.cumsum(U)
@@ -107,9 +136,9 @@ for t in range(len(time)):
     for i in range(5):
         summa += A[i] * np.exp(-t/tau_all[t][i])
     Impulse.append(summa)
+        summa += A[i] * np.exp(-t/tau_all[t][i])
+    Impulse.append(summa)
 
-plt.plot(range(len(time)), Impulse)
+plt.plot(time, Impulse)
 plt.show()
-
-plt.plot(I(t, 100) for t in range(500))
-plt.show()
+"""
