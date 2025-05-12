@@ -65,7 +65,7 @@ plt.plot(time, [B[1]*Conversion_factor for B in Bs], label= "B_2 Beta=0.1", line
 plt.plot(time, [B[2]*Conversion_factor for B in Bs], label= "B_3 Beta=0.1", linestyle = "dotted", color = "green")
 
 Bs = simulate(BETA=0.35)
-#plt.plot(time, concentrations_df["CO2ConcRCP45 (ppm CO2) "])
+plt.plot(time, concentrations_df["CO2ConcRCP45 (ppm CO2) "])
 plt.plot(time, [B[0]*Conversion_factor for B in Bs], label= "B_1 Beta=0.35", color = "red")
 plt.plot(time, [B[1]*Conversion_factor for B in Bs], label= "B_2 Beta=0.35", color = "blue")
 plt.plot(time, [B[2]*Conversion_factor for B in Bs], label= "B_3 Beta=0.35", color = "green")
