@@ -95,15 +95,6 @@ A = np.array([0.113, 0.213, 0.258, 0.273, 0.1430])
 tau_0 = np.array([2.0, 12.2, 50.4, 243.3, np.inf])
 
 
-def I(t, U_cum):
-
-    k = 3.06 * 10 ** (-3)
-    summa = 0
-    for i in range(5):
-        tau_i = tau_0[i]*(1+k*U_cum)
-        summa += A[i] * np.exp(-t/tau_i)
-    return summa
-
 
 
 U = np.array([emisions_df.loc[emisions_df['Time (year)'] == t].values[0][1] for t in time])
@@ -111,13 +102,27 @@ cumulative_emissions = np.cumsum(U)
 cumulative_emissions_shifted = np.concatenate(([0], cumulative_emissions[:-1])) # summan är upp till t-1
 
 
-plt.plot([I(t, cumulative_emissions_shifted[0])   for t in range(500)])
-plt.plot([I(t, cumulative_emissions_shifted[100]) for t in range(500)])
-plt.plot([I(t, cumulative_emissions_shifted[150]) for t in range(500)])
-plt.plot([I(t, cumulative_emissions_shifted[200]) for t in range(500)])
-plt.plot([I(t, cumulative_emissions_shifted[250]) for t in range(500)])
+def I(t, time):
+
+    k = 3.06 * 10 ** (-3)
+    summa = 0
+    for i in range(5):
+        tau_i = tau_0[i]*(1+k*cumulative_emissions_shifted[time])
+        summa += A[i] * np.exp(-t/tau_i)
+    return summa
+
+
+
+plt.plot([I(t, 100) for t in range(500)])
+plt.plot([I(t, 150) for t in range(500)])
+plt.plot([I(t, 200) for t in range(500)])
+plt.plot([I(t, 250) for t in range(500)])
+plt.plot([I(t, 300) for t in range(500)])
 
 plt.show()
+
+
+
 """
 k = 3.06 * 10 ** (-3)
 
@@ -142,3 +147,21 @@ for t in range(len(time)):
 plt.plot(time, Impulse)
 plt.show()
 """
+
+#TASK 4
+
+
+def M(t):
+    M = B_0[0]
+
+    for t_tilde in range(0, t):
+        M += I(t-t_tilde, t)*U[t_tilde]
+
+    return M
+
+
+plt.plot([M(t) for t in range(len(time))])
+plt.show()
+
+
+
