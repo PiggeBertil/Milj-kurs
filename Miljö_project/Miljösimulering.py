@@ -78,6 +78,16 @@ plt.legend()
 plt.show()
 
 # Task 3
+
+def I(t, U_cum):
+
+    k = 3.06 * 10 ** (-3)
+    summa = 0
+    for i in range(5):
+        tau_i = tau_0[i] * (1 + k * U_cum)
+        summa += A[i] * np.exp(-t/tau_i)
+    return summa
+
 A = np.array([0.113, 0.213, 0.258, 0.273, 0.1430])
 tau_0 = np.array([2.0, 12.2, 50.4, 243.3, np.inf])
 
@@ -93,10 +103,13 @@ for i in range(5):
 
 Impulse = []
 for t in range(len(time)):
-    sum = 0
+    summa = 0
     for i in range(5):
-        sum += A[i] * np.exp(-t/tau_all[t][i])
-    Impulse.append(sum)
+        summa += A[i] * np.exp(-t/tau_all[t][i])
+    Impulse.append(summa)
 
 plt.plot(range(len(time)), Impulse)
+plt.show()
+
+plt.plot(I(t, 100) for t in range(500))
 plt.show()
