@@ -118,6 +118,15 @@ plt.plot([I(t, cumulative_emissions_shifted[200]) for t in range(500)])
 plt.plot([I(t, cumulative_emissions_shifted[250]) for t in range(500)])
 
 plt.show()
+
+# Task 4
+
+def M(t):
+    M_0 = B_0[0]
+
+    for t in range(time):
+        M += I(time-t, cumulative_emissions_shifted[t])*U(t)
+
 """
 k = 3.06 * 10 ** (-3)
 
