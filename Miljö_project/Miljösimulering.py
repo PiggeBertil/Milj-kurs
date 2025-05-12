@@ -79,3 +79,27 @@ plt.plot(time, [B[2]*Conversion_factor for B in Bs], label= "B_3 Beta=0.8", colo
 plt.legend()
 
 plt.show()
+
+# Task 3
+A = np.array([0.113, 0.213, 0.258, 0.273, 0.1430])
+tau_0 = np.array([2.0, 12.2, 50.4, 243.3, np.inf])
+
+k = 3.06 * 10 ** (-3)
+
+U = np.array([emisions_df.loc[emisions_df['Time (year)'] == t].values[0][1] for t in time])
+cumulative_emissions = np.cumsum(U)
+cumulative_emissions_shifted = np.concatenate(([0], cumulative_emissions[:-1])) # summan är upp till t-1
+
+tau_all = np.zeros((len(time), 5))
+for i in range(5):
+    tau_all[:,i] = tau_0[i] * (1 + k * cumulative_emissions_shifted)
+
+Impulse = []
+for t in range(len(time)):
+    sum = 0
+    for i in range(5):
+        sum += A[i] * np.exp(-t/tau_all[t][i])
+    Impulse.append(sum)
+
+plt.plot(range(len(time)), Impulse)
+plt.show()
