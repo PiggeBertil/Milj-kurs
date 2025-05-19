@@ -216,3 +216,11 @@ radiativeForcing_df = pd.read_csv(filename)
 plt.plot(time, RF_co2, color='red')
 plt.plot(time, radiativeForcing_df["RF CO2 (W/m2)"], color='blue')
 plt.show()
+
+# Task 9
+
+s=1
+RF_sum = radiativeForcing_df["RF CO2 (W/m2)"].values + radiativeForcing_df["RF aerosols (W/m2)"].values * s + radiativeForcing_df["RF other than CO2 and aerosols (W/m2)"].values
+
+plt.plot(time, RF_sum)
+plt.show()
