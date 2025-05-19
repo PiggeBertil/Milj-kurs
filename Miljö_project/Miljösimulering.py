@@ -205,7 +205,14 @@ plt.show()
 
 #Task 8
 
+p_co2 = concentrations_df["CO2ConcRCP45 (ppm CO2) "].values
+p_co2_0 = p_co2[0]
 
+RF_co2 = 5.35 * np.log(p_co2/p_co2_0)
 
+filename = 'data/radiativeForcingRCP45.csv'
+radiativeForcing_df = pd.read_csv(filename)
 
-
+plt.plot(time, RF_co2, color='red')
+plt.plot(time, radiativeForcing_df["RF CO2 (W/m2)"], color='blue')
+plt.show()
