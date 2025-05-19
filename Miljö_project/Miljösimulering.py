@@ -224,3 +224,63 @@ RF_sum = radiativeForcing_df["RF CO2 (W/m2)"].values + radiativeForcing_df["RF a
 
 plt.plot(time, RF_sum)
 plt.show()
+
+# Task 10
+
+# Constants
+c = 4186  # specific heat capacity of water [J/(kg·K)]
+rho = 1020  # density of water [kg/m^3]
+h = 50  # effective depth of surface box [m]
+d = 2000  # effective depth of deep ocean box [m]
+
+# Parameters with uncertainty spans as comments
+lambda_climate = 0.5  # climate sensitivity parameter [K·W^-1·m^2]
+# Uncertainty span: 0.5 - 1.3 [K·W^-1·m^2]
+
+kappa = 1  # heat exchange coefficient [W·K^-1·m^-2]
+# Uncertainty span: 0.2 - 1 [W·K^-1·m^-2]
+
+# Radiative forcing (RF) is just defined as a parameter in W/m^2, value not specified
+RF = np.ones(len(time))  # radiative forcing [W/m^2] - value to be defined
+
+# Effective heat capacities
+C1 = c * h * rho  # surface box heat capacity [J/(m^2·K)]
+C2 = c * d * rho  # deep ocean box heat capacity [J/(m^2·K)]
+
+# Convert to [W·yr·K^-1·m^-2] by converting J to W·yr
+seconds_per_year = 365.25 * 24 * 60 * 60  # [s/yr]
+C1 /= seconds_per_year  # [W·yr·K^-1·m^-2]
+C2 /= seconds_per_year  # [W·yr·K^-1·m^-2]
+
+def temperature_response(lambda_climate = lambda_climate, kappa=kappa):
+    deltaT_0 = np.array([0,0])
+    deltaTs = [deltaT_0]
+
+    for t in range(len(time))[1:]:
+        deltaT = deltaTs[-1]
+
+        dT = np.zeros(2)
+
+        dT[0] = (RF[t] - deltaT[0]/lambda_climate - kappa*(deltaT[0]-deltaT[1]))/C1
+        dT[1] = (kappa * (deltaT[0]-deltaT[1]))/C2
+
+        deltaTs.append(deltaT + dT)
+    
+    return deltaTs
+
+deltaTs = temperature_response(lambda_climate, kappa)
+plt.plot(time, [deltaTs[t][0] for t in range(len(time))], label = "delta T1")
+plt.plot(time, [deltaTs[t][1] for t in range(len(time))], label = "delta T2")
+plt.legend()
+plt.show()
+
+# Task 10 b)
+
+def e_fold(delta_Ts, T_final):
+    for i in range(len(delta_Ts)):
+        if delta_Ts[i] > (1-np.exp(-1))*T_final:
+            return i
+    return "för långt"
+
+print("För T1: ", e_fold([deltaTs[t][0] for t in range(len(time))], RF[-1] * lambda_climate))
+print("För T2: ", e_fold([deltaTs[t][1] for t in range(len(time))], RF[-1] * lambda_climate))
