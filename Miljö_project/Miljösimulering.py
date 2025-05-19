@@ -20,23 +20,23 @@ B_0 = np.array([600.0, 600.0, 1500.0])  # GtC
 Conversion_factor = 0.469 # ppm CO2/GtC
 
 
-def simulate(BETA = 0.3, B_0=B_0, time = time):
+F_0 = np.zeros((3, 3))
+
+NPP_0 = 60.0
+
+F_0[1,0] = 15.0
+F_0[1,2] = 45.0
+F_0[2,0] = 45.0
+F_0[0,1] = NPP_0
+
+F = F_0
+
+alpha = F_0[:, :] / B_0[:, np.newaxis]
+
+def simulate(BETA = 0.3, time = time):
 
 
     Bs = [B_0] # GtC
-
-    F_0 = np.zeros((3, 3))
-
-    NPP_0 = 60.0
-
-    F_0[1,0] = 15.0
-    F_0[1,2] = 45.0
-    F_0[2,0] = 45.0
-    F_0[0,1] = NPP_0
-
-    F = F_0
-
-    alpha = F_0[:, :] / B_0[:, np.newaxis]
 
     for t in time[1:]:
         B = Bs[-1]
@@ -164,7 +164,48 @@ plt.plot(time, concentrations_df["CO2ConcRCP45 (ppm CO2) "])
 plt.plot(time, [M(t)*Conversion_factor for t in range(len(time))])
 plt.show()
 
-# Task 5
-# bild
+#Task 5
 
-# Task 6
+BETA = 0.25
+
+Bs = simulate(BETA=BETA)
+
+
+def M_combinded(t):
+
+    M = B_0[0]
+
+    for t_tilde in range(0, t):
+        B = Bs[t_tilde]
+
+        NPP = NPP_0 * (1 + BETA*np.log(B[0]/B_0[0]))
+
+
+        U_new = alpha[2,0]*B[2] + alpha[1,0]*B[1] - NPP + U[t_tilde]
+        M += I(t-t_tilde, t)*U_new
+
+    return M
+
+
+
+
+
+plt.plot(time, concentrations_df["CO2ConcRCP45 (ppm CO2) "])
+plt.plot(time, [M_combinded(t)*Conversion_factor for t in range(len(time))], label= f"B_1 Beta={BETA}", color = "red")
+plt.plot(time, [B[1]*Conversion_factor for B in Bs], label= f"B_2 Beta={BETA}", color = "blue")
+plt.plot(time, [B[2]*Conversion_factor for B in Bs], label= f"B_3 Beta={BETA}", color = "green")
+
+
+plt.plot(time, [(Bs[t][0] - M_combinded(t))*Conversion_factor for t in range(len(time))], label = "B_4 Beta=0.25", color = "orange")
+
+plt.legend()
+
+plt.show()
+
+
+#Task 8
+
+
+
+
+
