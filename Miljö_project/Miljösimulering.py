@@ -164,10 +164,7 @@ plt.plot(time, concentrations_df["CO2ConcRCP45 (ppm CO2) "])
 plt.plot(time, [M(t)*Conversion_factor for t in range(len(time))])
 plt.show()
 
+# Task 5
+# bild
 
-
-
-
-
-
-
+# Task 6
