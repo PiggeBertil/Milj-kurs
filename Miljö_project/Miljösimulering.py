@@ -284,3 +284,40 @@ def e_fold(delta_Ts, T_final):
 
 print("För T1: ", e_fold([deltaTs[t][0] for t in range(len(time))], RF[-1] * lambda_climate))
 print("För T2: ", e_fold([deltaTs[t][1] for t in range(len(time))], RF[-1] * lambda_climate))
+
+# Task 10 c)
+# ja, inkommande - utgående = accumulerad
+
+plt.plot(time, [C1*deltaTs[t][0]+C2*deltaTs[t][1] for t in range(len(time))], label = "accumulerad")
+plt.show()
+
+# task 11
+# a) förskjutning vart 0 börjar. bra ref period är t ex 1745-1765
+# b) små ändringar för små lambda, förändringshastighet
+# lambda = 0.5 ==> s = 0.8, k = 0.2
+# lambda = 0.8 ==> s = 1, k = 1
+# lambda = 1.3 ==> s = 1.4, k = 1
+# c) anta likformigt fördelat eller normalfördelat, sen räkna på det
+
+# task 12
+# c)
+# Lambda = 1.3 ==>
+#   case 1: 1.7250648395256074
+#   case 2: 2.97229670073431
+#   case 3: 3.631876627843044
+# Lambda = 0.8 ==>
+#   case 1: 1.4180887278714482
+#   case 2: 2.404052002387883
+#   case 3: 2.926426200245128
+# Lambda = 0.5 ==>
+#   case 1: 1.2782135709898834
+#   case 2: 2.2482621006025174
+#   case 3: 2.762226471980545
+
+# task 13
+# b)
+# utmanar sociala dimensionen, för konflikt om hur mycket aerosol som
+# ska släppas ut och hur varmt man vill ha det.
+# kan vara ohållbart att producera aerosol, naturlig resurs
+# stor risk om vi i framtiden måste avbryta aerosolutsläppen
+# kan riskera att permanent skada ekologiska förutsättningarna
