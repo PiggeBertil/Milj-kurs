@@ -289,9 +289,9 @@ shift= np.mean(T1s[1951-1765:1980-1765])
 plt.plot(time, np.array(T1s)-shift, label = "delta T1")
 plt.plot(time, np.array(T2s)-shift, label = "delta T2")
 
-plt.plot(NASA_time, NASA_tempdiff, label = "NASA temp_diff")
+plt.plot(NASA_time, NASA_tempdiff, linestyle = "dashed", label = "NASA temp_diff")
 
-plt.xlim((1880, 2024))
+plt.xlim((1765, 2024))
 plt.title("Simulerad och mätt temperatur över tid")
 plt.legend()
 plt.show()
@@ -302,23 +302,23 @@ plt.show()
 ############################################################################################################################################
 #This is for optimizing
 
-minimum = 10000000
-for s in [0.1, 0.2, 0.4, 0.8, 1, 1.2, 1.4, 1.6, 2, 2.5]:
-    for k in [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]:
-
-        RF_sum = RF_co2 + radiativeForcing_df["RF aerosols (W/m2)"].values * s + radiativeForcing_df["RF other than CO2 and aerosols (W/m2)"].values
-
-        deltaTs = temperature_response(1.3, k, RF = RF_sum) 
-
-        T1s =  [deltaTs[t][0] for t in range(len(time))]
-        T2s =  [deltaTs[t][1] for t in range(len(time))]
-
-        shift= np.mean(T1s[1951-1765:1980-1765])
-
-        if np.abs(np.array(T1s[1880-1765:2025-1765]) - shift - NASA_tempdiff).sum() < minimum:
-            minimum = np.abs(np.array(T1s[1880-1765:2025-1765]) - shift - NASA_tempdiff).sum()
-
-            print(s, k, minimum)
+#minimum = 10000000
+#for s in [0.1, 0.2, 0.4, 0.8, 1, 1.2, 1.4, 1.6, 2, 2.5]:
+#    for k in [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]:
+#
+#        RF_sum = RF_co2 + radiativeForcing_df["RF aerosols (W/m2)"].values * s + radiativeForcing_df["RF other than CO2 and aerosols (W/m2)"].values
+#
+#        deltaTs = temperature_response(1.3, k, RF = RF_sum) 
+#
+#        T1s =  [deltaTs[t][0] for t in range(len(time))]
+#        T2s =  [deltaTs[t][1] for t in range(len(time))]
+#
+#        shift= np.mean(T1s[1951-1765:1980-1765])
+#
+#        if np.abs(np.array(T1s[1880-1765:2025-1765]) - shift - NASA_tempdiff).sum() < minimum:
+#            minimum = np.abs(np.array(T1s[1880-1765:2025-1765]) - shift - NASA_tempdiff).sum()
+#
+#            print(s, k, minimum)
         
 
 
@@ -378,10 +378,10 @@ plt.show()
 
 #Task 12
 
+
+LAMBDA = 0.8
 s=1
 kappa = 0.7
-LAMBDA = 0.5
-
 ##############################################################################################################################
 
 U = np.array([emisions_df.loc[emisions_df['Time (year)'] == t].values[0][1] for t in time])
@@ -406,7 +406,7 @@ T2s =  [deltaTs[t][1] for t in range(len(time))]
 
 plt.plot(time, np.array(T1s), label = "delta T1, lambda = 0.8, case 1")
 
-print(T1s[2100-1765])
+print(f"For case 1 the temperature increased: {T1s[2100-1765]}")
 
 ##############################################################################################################################
 
@@ -430,7 +430,7 @@ T2s =  [deltaTs[t][1] for t in range(len(time))]
 
 plt.plot(time, np.array(T1s), label = "delta T1, lambda = 0.8, case 2")
 
-print(T1s[2100-1765])
+print(f"For case 2 the temperature increased: {T1s[2100-1765]}")
 
 ##############################################################################################################################
 
@@ -457,11 +457,11 @@ T2s =  [deltaTs[t][1] for t in range(len(time))]
 
 plt.plot(time, np.array(T1s), label = "delta T1, lambda = 0.8, case 3")
 
-print(T1s[2100-1765])
+print(f"For case 3 the temperature increased: {T1s[2100-1765]}")
 
 ##############################################################################################################################
 
-plt.xlim((1880, 2200))
+plt.xlim((1765, 2200))
 plt.legend()
 plt.title("A plot showing the medium surface temperature over time for different CO2-emmision scenarios")
 plt.show()
