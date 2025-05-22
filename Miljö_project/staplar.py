@@ -19,19 +19,7 @@ bars1 = ax.bar(x - width, case_1, width, label='Case 1', color='#1f77b4')
 bars2 = ax.bar(x,         case_2, width, label='Case 2', color='#ff7f0e')
 bars3 = ax.bar(x + width, case_3, width, label='Case 3', color='#2ca02c')
 
-# Etiketter över varje stapel
-def add_labels(bars):
-    for bar in bars:
-        height = bar.get_height()
-        ax.annotate(f'{height}',
-                    xy=(bar.get_x() + bar.get_width()/2, height),
-                    xytext=(0, 3),
-                    textcoords="offset points",
-                    ha='center', va='bottom', fontsize=9)
 
-add_labels(bars1)
-add_labels(bars2)
-add_labels(bars3)
 
 # Layoutjustering
 ax.set_xlabel('Lambda')
